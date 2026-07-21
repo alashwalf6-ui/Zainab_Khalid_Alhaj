@@ -1,77 +1,109 @@
-// ملف: solution1_simple.dart
+import 'dart:io';
+
+List<Map<String, dynamic>> students = [];
+int counter = 1;
 
 void main() {
+  String appName = "Student Management";
+  print(appName);
 
-  print("\n الطالب والدرجة");
-  print("-" * 30);
-
-
-  String name = "محمد";
-  double grade = 80.0;
-
-
-  double finalGrade = grade + 5.0;
-  if (finalGrade > 0) {
-    print(" ناجاح");
-  } else {
-    print(" راسب");
+  bool work = true;
+  while (work) {
+    showMessage();
+    String number = stdin.readLineSync() ?? "";
+    switch (number) {
+      case "1":
+        addStudent();
+        break;
+      case "2":
+        removeStudent();
+        break;
+      case "3":
+        showStudents();
+        break;
+      case "4":
+        findStudent();
+        break;
+      case "5":
+        work = false;
+        break;
+      default:
+        print("اختيار غير صحيح، حاول مرة أخرى.");
+    }
   }
-  print("الطالب: $name, الدرجة: $finalGrade");
+  print("تم الخروج من البرنامج.");
+}
 
+void showMessage() {
+  print("Choose 1 to Add Student");
+  print("Choose 2 to Remove Student");
+  print("Choose 3 to Show Students");
+  print("Choose 4 to Find Student");
+  print("Choose 5 to Stop The System");
+  stdout.write("Choose Number: ");
+}
 
+void addStudent() {
+  stdout.write("Enter Name: ");
+  String name = stdin.readLineSync() ?? "";
 
-  print("\n قائمة الطلاب");
-  print("-" * 30);
-  List students = [];
-  void addStudent(name, age, grade) {
-    students.add({
-      'name': name ?? 'غير معروف',
-      'age': age ?? 0,
-      'grade': grade ?? 0.0,
-    });
+  stdout.write("Enter Level: ");
+  int level = int.tryParse(stdin.readLineSync() ?? "") ?? 1;
+
+  stdout.write("Enter Department: ");
+  String department = stdin.readLineSync() ?? "";
+
+  stdout.write("Enter GPA: ");
+  double gpa = double.tryParse(stdin.readLineSync() ?? "") ?? 0.0;
+
+  students.add({
+    "id": counter++,
+    "name": name,
+    "department": department,
+    "level": level,
+    "gpa": gpa
+  });
+
+  print("Add Successful");
+}
+
+void removeStudent() {
+  stdout.write("Enter ID: ");
+  int? id = int.tryParse(stdin.readLineSync() ?? "");
+  if (id == null) {
+    print("Invalid");
+    return;
   }
-  addStudent('أحمد', 20, 85);
-  addStudent('سارة', 22, 92);
-  addStudent('خالد', 19, 65);
-  addStudent('نورة', 21, 78);
-  addStudent('علي', 20, 55);
-  addStudent('منى', 23, 88);
 
-  print("المتفوقين:");
-  for (var s in students) {
-    if (s['grade'] > 70) {
-      print("  - ${s['name']} (${s['grade']})");
+  students.removeWhere((student) => student['id'] == id);
+  print("Remove Done");
+}
+
+void showStudents() {
+  if (students.isEmpty) {
+    print("The List is empty");
+    return;
+  }
+
+  for (var student in students) {
+    print("ID: ${student['id']} | Name: ${student['name']} | Department: ${student['department']} | Level: ${student['level']}");
+  }
+}
+
+void findStudent() {
+  stdout.write("Enter ID: ");
+  int? id = int.tryParse(stdin.readLineSync() ?? "");
+  if (id == null) {
+    print("Invalid");
+    return;
+  }
+
+  for (var student in students) {
+    if (student['id'] == id) {
+      print("ID: ${student['id']} | Name: ${student['name']} | Department: ${student['department']} | Level: ${student['level']}");
+      return;
     }
   }
 
-
-
-  print("\n دالة القسمة");
-  print("-" * 30);
-
-  divide(num1, num2) {
-    try {
-      if (num2 == 0) throw "لا تقسم على صفر!";
-      return num1 / num2;
-    } catch (e) {
-      print("خطأ : $e");
-      return 0;
-    }
-  }
-  print("10 ÷ 2 = ${divide(10, 2)}");
-  print("5 ÷ 0 = ${divide(5, 0)}");
-
-
-
-
-  print("\n Null Safety");
-  print("-" * 30);
-
-  String? x;
-  print("الاسم: ${x ?? 'بدون اسم'}");
-
-  int? y;
-  print("الرقم: ${y ?? 0}");
-
-
+  print("Student Is not found");
 }
